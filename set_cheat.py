@@ -83,15 +83,21 @@ def cheat():
 
 def proof():
     """Proves* the theorem that a board of 16 cards may have no sets, 
-    but any board of 17 has at least one.
+    but adding any other card makes a set.
     
+    Technically doesn't prove that *any* board of 17 has a set but I 
+    think any setless board of 16 has to have the structure I use.
+    Proof of that lemma is left as an exercise for the reader**.
     
     *Because crappy fragile Python with no type annotations is how all
     the cool mathematicians prove their theorems. Or so I hear.
     
-    I do not claim this is the right way of doing anything.
-    But it was pretty quick to write.
+    **By which I mean me, next time this nerdsnipes me.
     """
+        
+    # I do not claim this is the right way of doing anything.
+    # But it was pretty quick to write.
+    
     full_deck = {Card(count, suit, colour, fill)
                      for count in Card.counts
                      for suit in Card.suits
@@ -108,4 +114,20 @@ def proof():
     
     assert len(diabolical_board) == 16
     assert find_set(diabolical_board) is None
-
+    
+    other_cards = full_deck - diabolical_board
+    
+    assert len(other_cards) == 81 - 16 == 65
+    
+    for new_card in other_cards:
+        print(str(new_card))
+        new_board = diabolical_board | {new_card}
+        assert len(new_board) == 17
+        
+        found_set = find_set(new_board)
+        assert found_set is not None
+        assert new_card in found_set
+        print(' '.join(str(card) for card in found_set))
+        
+    print("QED.")
+    
